@@ -33,6 +33,23 @@ module.exports = {
       res.status(500).json(err);
     }
   },
+  // Update a User
+  async updateUser(req, res) {
+    try {
+      const updatedUser = await User.findOneAndUpdate(
+        { _id: req.params.userId }, 
+        req.body, 
+        { new: true, runValidators: true })
+  
+      if (!updatedUser) {
+        return res.status(404).json({ message: 'No user with that ID' });
+      }
+  
+      res.json(updatedUser);
+    } catch (err) {
+      res.status(500).json(err);
+    }
+  },
   // Delete a User
   async deleteUser(req, res) {
     try {
