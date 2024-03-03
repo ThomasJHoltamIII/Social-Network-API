@@ -44,4 +44,65 @@ module.exports = {
       res.status(500).json(err);
     }
   },
+  // delete a post
+  async deletePost(req, res) {
+    try {
+      const post = await Post.findOneAndRemove(({ _id: req.params.postId}));
+
+      if (!post) {
+        return res.status(404).json({ message: "No post found"})
+      };
+
+      if (!post) {
+        return res
+          .status(404)
+          .json({ message: 'No post found.' });
+      }
+
+      res.json('Post deleted');
+    } catch (err) {
+      console.log(err);
+      res.status(500).json(err);
+    }
+  },
+  // Update a post
+  async updatePost(req, res) {
+    try {
+      const post = await Post.findOneAndUpdate(
+        { _id: req.params.postId },
+        { $set: req.body },
+        { runValidators: true, new: true }
+      );
+
+      if (!post) {
+        return res.status(404).json({ message: 'No post with this id!' });
+      }
+
+      res.json(post);
+    } catch (err) {
+      console.log(err);
+      res.status(500).json(err);
+    }
+  },
+  // Add Reaction
+  async addReaction(req, res) {
+    try {
+      const reaction = {
+        reactionBody: req.body.reactionBody,
+      };
+      const newReaction = await Post.findByIdAndUpdate(
+        req.params.postId,
+        { $addToSet: { reactions: reaction } },
+        { new: true }
+      );
+  
+      if (!newReaction) {
+        return res.status(404).json({ message: 'No post with this id!' });
+      }
+  
+      res.json(newReaction);
+    } catch (err) {
+      res.status(500).json(err);
+    }
+  }  
 };
