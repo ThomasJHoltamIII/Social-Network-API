@@ -1,4 +1,4 @@
-const User = require('../models/User');
+const { Post, User } = require('../models');
 
 module.exports = {
   async getUsers(req, res) {
@@ -33,4 +33,19 @@ module.exports = {
       res.status(500).json(err);
     }
   },
+  // Delete a User
+  async deleteUser(req, res) {
+    try {
+      const user = await User.findByIdAndDelete({ _id: req.params.userId})
+
+      if ( !user ) {
+        return res.status(404).json({ message: 'User not found'})
+      }
+
+      await Post.deleteMany({ _id: { $in: user.posts }})
+      res.json({message: " User and Posts deleted"})
+    } catch (err) {
+      res.status(500).json(err)
+    }
+  }
 };
