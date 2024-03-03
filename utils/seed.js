@@ -29,7 +29,7 @@ connection.once('open', async () => {
     for (let j = 0; j < reactionCount; j++) {
       reactions.push(allReactions[genRandomIndex(allReactions)]);
     }
-    const text = getRandomPost(50);
+    const text = getRandomPost();
     // Associate each post with the user
     const userRef = userRefs[i] 
     posts.push({ thoughtText: text, reactions, username: userRef });
@@ -42,6 +42,21 @@ connection.once('open', async () => {
     const post = posts[i];
     await User.findByIdAndUpdate(userIds[i], { $push: { posts: post._id } });
   }
+
+  // Function to generate a random set of friends for each user
+const generateFriendsForUsers = async (userIds) => {
+  await Promise.all(userIds.map(async (userId) => {
+    const potentialFriends = userIds.filter(id => id.toString() !== userId.toString());
+    const shuffled = potentialFriends.sort(() => 0.5 - Math.random());
+    const selectedFriends = shuffled.slice(0, Math.floor(Math.random() * (5 - 3 + 1)) + 3).map(id => id);
+
+    // Update the user document with selected friends
+    await User.findByIdAndUpdate(userId, { $push: { friends: { $each: selectedFriends } } });
+  }));
+};
+
+// Execute the function after inserting users
+await generateFriendsForUsers(userIds);
 
   console.timeEnd('seeding');
   process.exit(0);
