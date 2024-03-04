@@ -21,6 +21,8 @@ The social network api uses mongoose to communicate with a database that allows 
 
 
 ## Video
+https://drive.google.com/file/d/1fPUVRIDaBCAjMZyAUvdgSm7SLTWh8916/view?usp=sharing
+( Note: You may notice the reactions are blocked charachters and thats becuase they are emoji that dont show in the insomnia preview otherwise )
 
 ## Usage
 Clone the repisitory, open mongodb on your computer to run the server, use npm run seed to reieve a random data set and use insomnia to test the routes and manipulate that data.
