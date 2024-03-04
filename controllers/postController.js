@@ -89,6 +89,7 @@ module.exports = {
     try {
       const reaction = {
         reactionBody: req.body.reactionBody,
+        username: req.body.username
       };
       const newReaction = await Post.findByIdAndUpdate(
         req.params.postId,
@@ -104,5 +105,23 @@ module.exports = {
     } catch (err) {
       res.status(500).json(err);
     }
-  }  
+  } , 
+  // Remove Reaction
+  async removeReaction(req, res) {
+    try {
+      const updatedPost = await Post.findByIdAndUpdate(
+        req.params.postId,
+        { $pull: { reactions: { _id: req.params.reactionId } } },
+        { new: true }
+      );
+  
+      if (!updatedPost) {
+        return res.status(404).json({ message: 'No post found with this id!' });
+      }
+  
+      res.json(updatedPost);
+    } catch (err) {
+      res.status(500).json(err);
+    }
+  }
 };
