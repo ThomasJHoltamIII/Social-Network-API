@@ -1,5 +1,6 @@
 const { Schema, model } = require('mongoose');
 
+// Reaction SubDocument
 const reactionSchema = new Schema(
   {
     reactionId: {
@@ -61,7 +62,7 @@ thoughtSchema.virtual('reactionCount').get(function () {
   return this.reactions.length;
 });
 
-const Post = model('Post', thoughtSchema);
+const Thought = model('Thought', thoughtSchema);
 
-module.exports = Post;
+module.exports = Thought;
 

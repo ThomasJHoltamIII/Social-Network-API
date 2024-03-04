@@ -8,7 +8,7 @@ const names = [
   'Wizard',
   'Mystic',
   'Diver',
-  'Dune',
+  'Flash',
   'Quantum',
   'Glitch',
   'Frost',
@@ -46,7 +46,7 @@ const getNamePart = () => names[Math.floor(Math.random() * names.length)];
 const getRandomName = () => `${getNamePart()}${getNamePart()}`;
 const genRandomIndex = (arr) => Math.floor(Math.random() * arr.length);
 
-const getRandomPost = () => {
+const getRandomThought = () => {
   // Select two random quotes from the movieQuotes array
   const quote1 = movieQuotes[genRandomIndex(movieQuotes)];
   const quote2 = movieQuotes[genRandomIndex(movieQuotes)];
@@ -55,7 +55,7 @@ const getRandomPost = () => {
 
 
 module.exports = {
-  getRandomPost,
+  getRandomThought,
   genRandomIndex,
   getRandomName,
 };

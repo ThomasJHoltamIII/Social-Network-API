@@ -17,10 +17,10 @@ const userSchema = new Schema(
       required: true,
       match: [/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/, 'Please fill a valid email address']
     },
-    posts: [
+    thoughts: [
       {
         type: Schema.Types.ObjectId,
-        ref: 'Post',
+        ref: 'Thought',
       },
     ],
     friends: [
@@ -38,6 +38,7 @@ const userSchema = new Schema(
   }
 );
 
+// Friend count virtual to display the number of friends a user has
 userSchema.virtual('friendCount').get(function () {
   return this.friends.length; 
 });

@@ -1,11 +1,11 @@
 const connection = require('../config/connection');
-const { Post, User } = require('../models');
-const { getRandomPost, genRandomIndex, getRandomName } = require('./data');
+const { Thought, User } = require('../models');
+const { getRandomThought, genRandomIndex, getRandomName } = require('./data');
 
 console.time('seeding');
 
 connection.once('open', async () => {
-  await connection.db.dropCollection('posts').catch(err => console.log('No posts collection to drop.'));
+  await connection.db.dropCollection('thoughts').catch(err => console.log('No thoughts collection to drop.'));
   await connection.db.dropCollection('users').catch(err => console.log('No users collection to drop.'));
 
   // Create and insert users
@@ -17,8 +17,8 @@ connection.once('open', async () => {
   }
   const insertedUsers = await User.collection.insertMany(users);
   const userRefs = users.map(user => user.username);
-  // Create and insert posts, associating them with user IDs
-  const posts = [];
+  // Create and insert thoughts, associating them with user IDs
+  const thoughts = [];
   const userIds = Object.values(insertedUsers.insertedIds);
   for (let i = 0; i < 10; i++) {
     // Emojis added for reactions
@@ -29,18 +29,18 @@ connection.once('open', async () => {
     for (let j = 0; j < reactionCount; j++) {
       reactions.push(allReactions[genRandomIndex(allReactions)]);
     }
-    const text = getRandomPost();
-    // Associate each post with the user
+    const text = getRandomThought();
+    // Associate each thought with the user
     const userRef = userRefs[i] 
-    posts.push({ thoughtText: text, reactions, username: userRef });
+    thoughts.push({ thoughtText: text, reactions, username: userRef });
   }
 
-  await Post.collection.insertMany(posts);
+  await Thought.collection.insertMany(thoughts);
 
-  // Update user documents to include posts
-  for (let i = 0; i < posts.length; i++) {
-    const post = posts[i];
-    await User.findByIdAndUpdate(userIds[i], { $push: { posts: post._id } });
+  // Update user documents to include thoughts
+  for (let i = 0; i < thoughts.length; i++) {
+    const thought = thoughts[i];
+    await User.findByIdAndUpdate(userIds[i], { $push: { thoughts: thought._id } });
   }
 
   // Function to generate a random set of friends for each user
