@@ -64,5 +64,23 @@ module.exports = {
     } catch (err) {
       res.status(500).json(err)
     }
+  },
+  // Add a friend
+  async addFriend(req, res) {
+    try {
+      const { userId, friendId } = req.params;
+      const user = await User.findById(userId);
+      if (!user) return res.status(404).send('User not found');
+  
+      if (!user.friends.includes(friendId)) {
+        user.friends.push(friendId);
+        await user.save();
+        res.json({ meassage: 'New Friend Added 🥳'});
+      } else {
+        res.status(400).send('Friend already added');
+      }
+    } catch (err) {
+      res.status(500).send(err);
+    }
   }
 };
